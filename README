@@ -1,0 +1,24 @@
+Arquivos necessários:
+	[1] tpp.cpp
+	[2] tf4f2.cpp
+	[3] tr.sh
+	[4] tfp.sh
+
+Após a compilação será gerada uma pasta bin contendo os arquivos de execução do tradutor.
+
+Para ser executado o tfp.sh precisa de uma variável de ambiente TFPHOME apontando para o diretório contendo os executáveis do tradutor (deve haver um arquivo chamado tfp.sh e 2 diretórios TF4F2 e TPP, no caso a pasta bin gerada pela compilação)
+
+Sintaxe:
+
+./tfp.sh pname folder rootf out
+
+ou
+
+./tfp.sh [nome do projeto] [diretório com arquivos csp] [nome do arquivo "root" do projeto] [diretório do arquivo de saída]
+
+Exemplo:
+
+	$TFPHOME/tfp.sh ChemicalDetectorSoftware /home/rafaelma/Documents/IC/CSP/chemical/ System.csp ~/model_314.pm 
+
+
+O arquivo PRISM é gerado no diretório especificado em out
