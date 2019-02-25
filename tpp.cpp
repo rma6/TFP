@@ -5,6 +5,7 @@ By Rafael Marinho*/
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <regex>
 
 using namespace std;
 
@@ -178,6 +179,10 @@ int main(int nNumberofArgs, char* pszArgs[])
     i=input.find("nondeterministic");
     input.erase(i,16);
     input.insert(i,"mdp");
+
+    //adds () between & ->
+    regex e("&(.+)\->");
+    input = regex_replace(input, e, "& \($1\) \->");
 
     f = fopen(strcat(pszArgs[2],"/model_out.pm"),"w");
     fprintf(f, "%s", input.c_str());
