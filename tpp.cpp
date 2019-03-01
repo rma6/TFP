@@ -6,6 +6,7 @@ By Rafael Marinho*/
 #include <cstring>
 #include <iostream>
 #include <regex>
+#include <vector>
 
 using namespace std;
 
@@ -31,12 +32,8 @@ int main(int nNumberofArgs, char* pszArgs[])
     in[fsize] = 0;
     string input(in);
 
-    //Erases module WATCHDOG
-    i=input.find("module WATCHDOG");
-    j=input.find("endmodule",i);
-    input.erase(i-1,j-i+11);
-
-    for(i=0;input[i]!=0;i++)//Translates ".."
+    //Translates ".."
+    for(i=0;input[i]!=0;i++)
     {
         if(input[i]=='[')
         {
@@ -81,7 +78,8 @@ int main(int nNumberofArgs, char* pszArgs[])
         }
     }
 
-    for(i=0;input[i]!=0;i++)//Translates ","
+    //Translates ","
+    for(i=0;input[i]!=0;i++)
     {
         if(input[i]=='[')
         {
@@ -155,7 +153,7 @@ int main(int nNumberofArgs, char* pszArgs[])
                 input.insert(i, rep);
             }
         }
-    }
+    }    
 
     //Erases dummys
     while((i=input.find("[dummy]"))!=string::npos)
@@ -164,26 +162,52 @@ int main(int nNumberofArgs, char* pszArgs[])
         input.erase(i-2, j-i+3);
     }
 
-    //Erases traces
-    while((i=input.find(" !trace_error &"))!=string::npos)
-    {
-        input.erase(i, 15);
-    }
-
-    //Erases system 
-    i=input.find("system");
-    j=input.find("endsystem",i);
-    input.erase(i,j-i+9);
-
     //replaces nondeterministic for mdp
     i=input.find("nondeterministic");
     input.erase(i,16);
     input.insert(i,"mdp");
 
     //adds () between & ->
-    regex e("&(.+)\->");
-    input = regex_replace(input, e, "& \($1\) \->");
+    regex e1("&(.+)\\->");
+    input = regex_replace(input, e1, "& ($1) ->");
 
+    //capture BLOCK numbers and [block] content
+    vector<string> blockNumbers;
+    regex e2("block<\\-(?!block)(.+)");
+    smatch m2;
+    string inputCopy = input;
+    while(regex_search(inputCopy, m2, e2))
+    {
+        blockNumbers.push_back(m2.str(1));
+        inputCopy = m2.suffix().str();
+    }
+
+    string blockContent;
+    int insertBlockPos;
+    regex e3("\\[block\\](.+\\n)");
+    smatch m3;
+    regex_search(input, m3, e3);
+    insertBlockPos=m3.position()+m3[0].length();
+    blockContent=m3.str(1);
+
+    //adds module BLOCK content
+    for(int i=0; i<blockNumbers.size(); i++)
+    {
+        input.insert(insertBlockPos, string("\t[")+blockNumbers[i]+string("]")+blockContent);
+        insertBlockPos+=blockNumbers[i].length()+blockContent.length()+3;
+    }
+
+    //remove system blocks
+    while((i=input.find(" { dummy<-dummy"))>0)
+    {
+        j=input.find("}", i);
+        input.erase(i, j-i+1);
+    }
+    i=input.find(" { block<-block");
+    j=input.find("}", i);
+    input.erase(i, j-i+1);
+
+    //writes to my file
     f = fopen(strcat(pszArgs[2],"/model_out.pm"),"w");
     fprintf(f, "%s", input.c_str());
     return 0;
