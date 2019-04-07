@@ -6,7 +6,7 @@ all: tpp tf4f2 check
 	chmod +x bin/tfp.sh
 
 tpp: check
-	@ g++ -std=c++0x tpp.cpp -g -o tpp ;\
+	@ g++ -std=c++11 tpp.cpp -g -o tpp ;\
 	if [ ! -d bin ]; then \
 		mkdir bin ;\
 	fi ;\
@@ -14,7 +14,7 @@ tpp: check
 	chmod +x bin/tpp
 
 tf4f2: check
-	@ g++ -std=c++0x tf4f2.cpp -g -o tr ;\
+	@ g++ -std=c++11 tf4f2.cpp -g -o tr ;\
 	if [ ! -d bin ]; then \
 		mkdir bin ;\
 	fi ;\
