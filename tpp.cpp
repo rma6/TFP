@@ -205,7 +205,10 @@ int main(int nNumberofArgs, char* pszArgs[])
     }
     i=input.find(" { block<-block");
     j=input.find("}", i);
-    input.erase(i, j-i+1);
+    if(i != string::npos && j != string::npos)
+    {
+        input.erase(i, j-i+1);
+    }
 
     //writes to my file
     f = fopen(strcat(pszArgs[2],"/model_out.pm"),"w");
