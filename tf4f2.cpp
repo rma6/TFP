@@ -1,4 +1,4 @@
-/*Translator FDR4 FDR2 V0.3
+/*Translator FDR4 FDR2 V0.4
 By Rafael Marinho*/
 #include <cstdio>
 #include <cstdlib>

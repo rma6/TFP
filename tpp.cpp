@@ -1,4 +1,4 @@
-/*Translator Prism Prism V1.0
+/*Translator Prism Prism V1.2
 By Rafael Marinho*/
 #include <cstdio>
 #include <cstdlib>
